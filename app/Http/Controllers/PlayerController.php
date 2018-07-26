@@ -4,14 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Ranking;
-use App\Player;
 use Exception;
 use Validator;
 
 class PlayerController extends Controller
 {
     private $validationRules = [
-        'name' => 'required|max:255'
+        'name' => 'required|max:255|min:3'
     ];
 
     /**
@@ -47,11 +46,11 @@ class PlayerController extends Controller
         Validator::make($request->all(), $this->validationRules)->validate();
         try {
             $name = $request->get('name');
-            $players = Player::where('ranking_id', $ranking->id)
+            $playerAlreadyExists = $ranking->players()
                 ->where('name', $name)
-                ->count();
+                ->count() > 0;
             
-            if ($players) {
+            if ($playerAlreadyExists) {
                 throw new Exception('The name has already been taken.');
             }
 

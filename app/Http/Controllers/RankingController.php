@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Ranking;
-use App\Player;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Exception;
@@ -12,7 +11,7 @@ use Validator;
 class RankingController extends Controller
 {
     private $validationRules = [
-        'name' => 'required|unique:rankings|max:255'
+        'name' => 'required|unique:rankings|max:255|min:3'
     ];
 
     /**
@@ -115,7 +114,7 @@ class RankingController extends Controller
     {
         try {
             $ranking->players()->delete();
-            Ranking::destroy($ranking->id);
+            $ranking->delete();
             return redirect('home')->withSuccess('Ranking deleted!');
         } catch (Exception $exception) {
             return redirect()->back()->withErrors($exception->getMessage());
