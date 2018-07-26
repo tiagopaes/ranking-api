@@ -5,6 +5,9 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <h1> Edit Ranking </h1>
+
+            @include('layouts.alerts')
+            
             <form action="{{ route('ranking.update', $ranking->id) }}" method="POST">
                 @method('PUT')
                 @csrf

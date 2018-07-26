@@ -6,6 +6,8 @@
         <div class="col-md-8">
             <h1> {{ $ranking->name }} </h1>
 
+            @include('layouts.alerts')
+
             <div class="text-right">
                 <a href="{{ route('ranking.player.create', $ranking->id) }}" class="btn btn-primary">
                     New Player

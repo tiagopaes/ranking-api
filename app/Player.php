@@ -11,6 +11,7 @@ class Player extends Model
         'name',
         'score'
     ];
+    
     public function ranking()
     {
         return $this->belongsTo(Ranking::class);

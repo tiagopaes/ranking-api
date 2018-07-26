@@ -5,6 +5,8 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <h1>Rankings</h1>
+
+            @include('layouts.alerts')
             
             <div class="text-right">
                 <a href="{{ route('ranking.create') }}" class="btn btn-primary">

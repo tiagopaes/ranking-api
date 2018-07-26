@@ -4,9 +4,26 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Ranking;
+use App\Player;
+use Exception;
+use Validator;
 
 class PlayerController extends Controller
 {
+    private $validationRules = [
+        'name' => 'required|max:255'
+    ];
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -27,11 +44,27 @@ class PlayerController extends Controller
      */
     public function store(Request $request, Ranking $ranking)
     {
-        $ranking->players()->create([
-            'name' => $request->get('name'),
-            'score' => 0
-        ]);
-        return redirect(route('ranking.show', $ranking->id));
+        Validator::make($request->all(), $this->validationRules)->validate();
+        try {
+            $name = $request->get('name');
+            $players = Player::where('ranking_id', $ranking->id)
+                ->where('name', $name)
+                ->count();
+            
+            if ($players) {
+                throw new Exception('The name has already been taken.');
+            }
+
+            $ranking->players()->create([
+                'name' => $name,
+                'score' => 0
+            ]);
+
+            return redirect(route('ranking.show', $ranking->id))
+                ->withSuccess('Player created!');
+        } catch (Exception $exception) {
+            return redirect()->back()->withErrors($exception->getMessage());
+        }
     }
 
     /**

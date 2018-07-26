@@ -5,6 +5,9 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <h1> New Ranking </h1>
+            
+            @include('layouts.alerts')
+
             <form method="POST" action="{{ route('ranking.store') }}">
                 @csrf
                 <div class="form-group">

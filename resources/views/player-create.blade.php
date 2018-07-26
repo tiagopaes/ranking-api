@@ -5,6 +5,9 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <h1> New Player </h1>
+            
+            @include('layouts.alerts')
+
             <form method="POST" action="{{ route('ranking.player.store', $ranking->id) }}">
                 @csrf
                 <div class="form-group">

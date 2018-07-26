@@ -6,9 +6,15 @@ use App\Ranking;
 use App\Player;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Exception;
+use Validator;
 
 class RankingController extends Controller
 {
+    private $validationRules = [
+        'name' => 'required|unique:rankings|max:255'
+    ];
+
     /**
      * Create a new controller instance.
      *
@@ -37,11 +43,17 @@ class RankingController extends Controller
      */
     public function store(Request $request)
     {
-        Ranking::create([
-            'name' => $request->get('name'),
-            'user_id' => Auth::id()
-        ]);
-        return redirect('home');
+        Validator::make($request->all(), $this->validationRules)->validate();
+        try {
+            Ranking::create([
+                'name' => $request->get('name'),
+                'user_id' => Auth::id()
+            ]);
+
+            return redirect('home')->withSuccess('Ranking created!');
+        } catch (Exception $exception) {
+            return redirect()->back()->withErrors($exception->getMessage());
+        }
     }
 
     /**
@@ -52,9 +64,10 @@ class RankingController extends Controller
      */
     public function show(Ranking $ranking)
     {
-        $ranking->players = Player::where('ranking_id', $ranking->id)
+        $ranking->players = $ranking->players()
             ->orderBy('score', 'desc')
             ->get();
+
         return view('ranking', [
             'ranking' => $ranking
         ]);
@@ -63,14 +76,13 @@ class RankingController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Ranking  $ranking
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Ranking  $ranking)
     {
         return view('ranking-edit', [
-            'ranking' => Ranking::where('id', $id)
-                ->first()
+            'ranking' => $ranking
         ]);
     }
 
@@ -83,9 +95,14 @@ class RankingController extends Controller
      */
     public function update(Request $request, Ranking $ranking)
     {
-        $ranking->name = $request->get('name');
-        $ranking->save();
-        return redirect('home');
+        Validator::make($request->all(), $this->validationRules)->validate();
+        try {
+            $ranking->name = $request->get('name');
+            $ranking->save();
+            return redirect('home')->withSuccess('Ranking updated!');
+        } catch (Exception $exception) {
+            return redirect()->back()->withErrors($exception->getMessage());
+        }
     }
 
     /**
@@ -96,7 +113,12 @@ class RankingController extends Controller
      */
     public function destroy(Ranking $ranking)
     {
-        Ranking::destroy($ranking->id);
-        return redirect('home');
+        try {
+            $ranking->players()->delete();
+            Ranking::destroy($ranking->id);
+            return redirect('home')->withSuccess('Ranking deleted!');
+        } catch (Exception $exception) {
+            return redirect()->back()->withErrors($exception->getMessage());
+        }
     }
 }
