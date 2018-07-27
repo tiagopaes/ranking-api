@@ -1,0 +1,622 @@
+{
+	"info": {
+		"_postman_id": "f216e71a-b700-4cbb-9bc4-8c502ecee7e5",
+		"name": "Ranking api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cb17e5bf-5016-4d19-85a8-0df2a55f29a6",
+						"type": "text/javascript",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"token\", data.access_token);"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"grant_type\": \"password\",\n\t\"client_id\": 5,\n\t\"client_secret\": \"o6AyOYzXR9ogQAIA1YFqGlTOAXK1negy7yBP68hW\",\n\t\"username\": \"tiaguera@mailinator.com\",\n\t\"password\": \"123456\",\n\t\"scope\": \"*\"\n}\n"
+				},
+				"url": {
+					"raw": "{{host}}/oauth/token",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"oauth",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "{{host}}/api/user",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Rankings",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0b624e14-8e3b-42f6-a925-b5d533c0a4cf",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "{{host}}/api/ranking",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"ranking"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Ranking",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "{{host}}/api/ranking/1",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"ranking",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Ranking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0b624e14-8e3b-42f6-a925-b5d533c0a4cf",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "07c37aca-10fd-4187-a88d-a9ab733e4f3f",
+						"type": "text/javascript",
+						"exec": [
+							"var random_suffix = Math.random().toString(36).substring(10);",
+							"var ranking_name = 'ranking_' + random_suffix;",
+							"postman.setEnvironmentVariable(\"random_ranking_name\", ranking_name);"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"{{random_ranking_name}}\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/ranking",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"ranking"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Ranking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0b624e14-8e3b-42f6-a925-b5d533c0a4cf",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "07c37aca-10fd-4187-a88d-a9ab733e4f3f",
+						"type": "text/javascript",
+						"exec": [
+							"var random_suffix = Math.random().toString(36).substring(10);",
+							"var ranking_name = 'ranking_' + random_suffix;",
+							"postman.setEnvironmentVariable(\"random_ranking_name\", ranking_name);"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"{{random_ranking_name}}\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/ranking/1",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"ranking",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Ranking",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/ranking/1",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"ranking",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Players",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0b624e14-8e3b-42f6-a925-b5d533c0a4cf",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"score\": 40,\n\t\"name\": \"manezinho 3\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/ranking/1/player",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"ranking",
+						"1",
+						"player"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Player",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0b624e14-8e3b-42f6-a925-b5d533c0a4cf",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"score\": 40,\n\t\"name\": \"manezinho 3\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/ranking/1/player/1",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"ranking",
+						"1",
+						"player",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Player",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0b624e14-8e3b-42f6-a925-b5d533c0a4cf",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "45905077-ca6d-4229-8179-58c5cf439488",
+						"type": "text/javascript",
+						"exec": [
+							"var random_suffix = Math.random().toString(36).substring(10);",
+							"var player_name = 'player_' + random_suffix;",
+							"postman.setEnvironmentVariable(\"random_player_name\", player_name);"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"{{random_player_name}}\",\n\t\"score\": 0\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/ranking/2/player",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"ranking",
+						"2",
+						"player"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Player",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0b624e14-8e3b-42f6-a925-b5d533c0a4cf",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "45905077-ca6d-4229-8179-58c5cf439488",
+						"type": "text/javascript",
+						"exec": [
+							"var random_suffix = Math.random().toString(36).substring(10);",
+							"var player_name = 'player_' + random_suffix;",
+							"postman.setEnvironmentVariable(\"random_player_name\", player_name);"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"{{random_player_name}}\",\n\t\"score\": 0\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/ranking/2/player/13",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"ranking",
+						"2",
+						"player",
+						"13"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Player",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0b624e14-8e3b-42f6-a925-b5d533c0a4cf",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "45905077-ca6d-4229-8179-58c5cf439488",
+						"type": "text/javascript",
+						"exec": [
+							"var random_suffix = Math.random().toString(36).substring(10);",
+							"var player_name = 'player_' + random_suffix;",
+							"postman.setEnvironmentVariable(\"random_player_name\", player_name);"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/ranking/2/player/13",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"ranking",
+						"2",
+						"player",
+						"13"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
