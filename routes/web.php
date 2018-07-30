@@ -19,4 +19,4 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('ranking', 'RankingController')->except(['index']);
-Route::resource('ranking.player', 'PlayerController')->except(['index']);
+Route::resource('ranking.player', 'PlayerController')->only(['create', 'store']);
