@@ -11,7 +11,7 @@ use Validator;
 class RankingController extends Controller
 {
     private $validationRules = [
-        'name' => 'required|unique:rankings|max:255|min:3'
+        'name' => 'required|max:255|min:3'
     ];
 
     /**
@@ -44,8 +44,16 @@ class RankingController extends Controller
     {
         Validator::make($request->all(), $this->validationRules)->validate();
         try {
+            $name = $request->get('name');
+            $rankingAlreadyExists = Ranking::where('user_id', Auth::id())
+                ->where('name', $name)
+                ->count() > 0;
+
+            if ($rankingAlreadyExists) {
+                throw new Exception('The name has already been taken.');
+            }
             Ranking::create([
-                'name' => $request->get('name'),
+                'name' => $name,
                 'user_id' => Auth::id()
             ]);
 
@@ -96,7 +104,15 @@ class RankingController extends Controller
     {
         Validator::make($request->all(), $this->validationRules)->validate();
         try {
-            $ranking->name = $request->get('name');
+            $name = $request->get('name');
+            $rankingAlreadyExists = Ranking::where('user_id', Auth::id())
+                ->where('name', $name)
+                ->count() > 0;
+
+            if ($rankingAlreadyExists) {
+                throw new Exception('The name has already been taken.');
+            }
+            $ranking->name = $name;
             $ranking->save();
             return redirect('home')->withSuccess('Ranking updated!');
         } catch (Exception $exception) {
