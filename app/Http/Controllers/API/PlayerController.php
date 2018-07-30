@@ -126,7 +126,7 @@ class PlayerController extends Controller
     {
         try {
             $player->delete();
-            return ['message' => 'Ranking deleted!'];
+            return ['message' => 'Player deleted!'];
         } catch (Exception $exception) {
             return response()->json([
                 'error' => $exception->getMessage()
