@@ -70,8 +70,14 @@ class PlayerController extends Controller
      * @param  \App\Ranking  $ranking
      * @return \Illuminate\Http\Response
      */
-    public function show(Ranking $ranking, Player $player)
+    public function show(Ranking $ranking, Player $player, Request $request)
     {
+        if ($ranking->user_id != $request->user()->id) {
+            return response()->json([
+                'error' => 'not found'
+            ], 404);
+        }
+        
         return $player;
     }
 
@@ -84,6 +90,12 @@ class PlayerController extends Controller
      */
     public function update(Request $request, Ranking $ranking, Player $player)
     {
+        if ($ranking->user_id != $request->user()->id) {
+            return response()->json([
+                'error' => 'not found'
+            ], 404);
+        }
+
         $validator = Validator::make($request->all(), [
             'name' => 'string|max:255|min:3',
             'score' => 'integer|min:0'
@@ -122,8 +134,14 @@ class PlayerController extends Controller
      * @param  \App\Ranking  $ranking
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Ranking $ranking, Player $player)
+    public function destroy(Ranking $ranking, Player $player, Request $request)
     {
+        if ($ranking->user_id != $request->user()->id) {
+            return response()->json([
+                'error' => 'not found'
+            ], 404);
+        }
+
         try {
             $player->delete();
             return ['message' => 'Player deleted!'];

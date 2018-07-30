@@ -11,7 +11,7 @@ use Validator;
 class RankingController extends Controller
 {
     private $validationRules = [
-        'name' => 'required|unique:rankings|max:255|min:3'
+        'name' => 'required|max:255|min:3'
     ];
 
     /**
@@ -39,9 +39,20 @@ class RankingController extends Controller
             return response()->json($validator->errors(), 400);
         }
 
+        $name = $request->get('name');
+        $rankingAlreadyExists = Ranking::where('user_id', $request->user()->id)
+            ->where('name', $name)
+            ->count() > 0;
+
+        if ($rankingAlreadyExists) {
+            return response()->json([
+                'error' => 'The name has already been taken.'
+            ], 422);
+        }
+
         try {
             return Ranking::create([
-                'name' => $request->get('name'),
+                'name' => $name,
                 'user_id' => $request->user()->id
             ]);
         } catch (Exception $exception) {
@@ -57,8 +68,13 @@ class RankingController extends Controller
      * @param  \App\Ranking  $ranking
      * @return \Illuminate\Http\Response
      */
-    public function show(Ranking $ranking)
+    public function show(Ranking $ranking, Request $request)
     {
+        if ($ranking->user_id != $request->user()->id) {
+            return response()->json([
+                'error' => 'not found'
+            ], 404);
+        }
         return $ranking;
     }
 
@@ -71,14 +87,31 @@ class RankingController extends Controller
      */
     public function update(Request $request, Ranking $ranking)
     {
+        if ($ranking->user_id != $request->user()->id) {
+            return response()->json([
+                'error' => 'not found'
+            ], 404);
+        }
+
         $validator = Validator::make($request->all(), $this->validationRules);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
 
+        $name = $request->get('name');
+        $rankingAlreadyExists = Ranking::where('user_id', $request->user()->id)
+            ->where('name', $name)
+            ->count() > 0;
+
+        if ($rankingAlreadyExists) {
+            return response()->json([
+                'error' => 'The name has already been taken.'
+            ], 422);
+        }
+
         try {
-            $ranking->name = $request->get('name');
+            $ranking->name = $name;
             $ranking->save();
             return ['message' => 'Ranking updated!'];
         } catch (Exception $exception) {
@@ -94,8 +127,14 @@ class RankingController extends Controller
      * @param  \App\Ranking  $ranking
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Ranking $ranking)
+    public function destroy(Ranking $ranking, Request $request)
     {
+        if ($ranking->user_id != $request->user()->id) {
+            return response()->json([
+                'error' => 'not found'
+            ], 404);
+        }
+
         try {
             $ranking->players()->delete();
             $ranking->delete();
