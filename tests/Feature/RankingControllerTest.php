@@ -17,7 +17,7 @@ class RankingControllerTest extends TestCase
         $ranking = factory(Ranking::class)->create();
         $this->actingAs($ranking->user)
             ->get("/ranking/{$ranking->id}")
-            ->assertStatus(200)
+            ->assertOk()
             ->assertSee($ranking->name);
     }
 
@@ -51,7 +51,64 @@ class RankingControllerTest extends TestCase
     {
         $ranking = factory(Ranking::class)->create();
         $this->assertEquals(1, $ranking->user->rankings()->count());
-        $this->actingAs($ranking->user)->delete("/ranking/{$ranking->id}");
+        $this->actingAs($ranking->user)
+            ->delete("/ranking/{$ranking->id}");
         $this->assertEquals(0, $ranking->user->rankings()->count());
+    }
+
+    public function testShouldShowTheCreateForm()
+    {
+        $user = factory(User::class)->create();
+        $this->actingAs($user)
+            ->get('/ranking/create')
+            ->assertOk()
+            ->assertSee('New Ranking');
+    }
+
+    public function testShouldShowTheRankingPlayersList()
+    {
+        $ranking = factory(Ranking::class)->create();
+        $ranking->players()->create(['name' => 'player name']);
+
+        $this->actingAs($ranking->user)
+            ->get("/ranking/{$ranking->id}")
+            ->assertOk()
+            ->assertSee('player name');
+    }
+
+    public function testShouldShowTheEditForm()
+    {
+        $ranking = factory(Ranking::class)->create();
+        $this->actingAs($ranking->user)
+            ->get("/ranking/{$ranking->id}/edit")
+            ->assertOk()
+            ->assertSee('Edit Ranking');
+    }
+
+    public function testShouldNotAllowDuplicatedNamesWhenCreatingRanking()
+    {
+        $user = factory(User::class)->create();
+        $user->rankings()->create(['name' => 'simple name']);
+        $this->actingAs($user)
+            ->post('/ranking', ['name' => 'simple name']);
+        
+        $this->actingAs($user)
+            ->get('/home')
+            ->assertOk()
+            ->assertSee('The name has already been taken');
+    }
+
+    public function testShouldNotAllowDuplicatedNamesWhenUpdatingRanking()
+    {
+        $user = factory(User::class)->create();
+        $user->rankings()->create(['name' => 'simple name 1']);
+        $ranking2 = $user->rankings()->create(['name' => 'simple name 2']);
+        $this->actingAs($user)
+            ->put("/ranking/{$ranking2->id}", ['name' => 'simple name 1']);
+        
+        $this->actingAs($user)
+            ->get('/home')
+            ->assertOk()
+            ->assertSee('The name has already been taken');
     }
 }

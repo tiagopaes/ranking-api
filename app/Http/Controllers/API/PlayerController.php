@@ -49,7 +49,7 @@ class PlayerController extends Controller
         if ($playerAlreadyExists) {
             return response()->json([
                 'error' => 'The name has already been taken.'
-            ], 400);
+            ], 422);
         }
 
         try {
@@ -97,8 +97,8 @@ class PlayerController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'name' => 'string|max:255|min:3',
-            'score' => 'integer|min:0'
+            'name' => 'string|max:255|min:3|required_without:score',
+            'score' => 'integer|min:0|required_without:name'
         ]);
 
         if ($validator->fails()) {
@@ -113,7 +113,7 @@ class PlayerController extends Controller
             if ($playerAlreadyExists) {
                 return response()->json([
                     'error' => 'The name has already been taken.'
-                ], 400);
+                ], 422);
             }
         }
 
