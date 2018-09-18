@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Ranking;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
@@ -25,6 +25,8 @@ class HomeController extends Controller
      */
     public function index()
     {
+        Log::info('Showing home page for user: ' . Auth::id());
+
         return view('home', [
             'rankings' => Ranking::where('user_id', Auth::id())->get()
         ]);

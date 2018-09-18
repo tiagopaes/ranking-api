@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Exception;
 use Validator;
+use Illuminate\Support\Facades\Log;
 
 class RankingController extends Controller
 {
@@ -31,6 +32,8 @@ class RankingController extends Controller
      */
     public function create()
     {
+        Log::info('Showing create ranking form for user: ' . Auth::id());
+
         return view('ranking-create');
     }
 
@@ -71,6 +74,8 @@ class RankingController extends Controller
      */
     public function show(Ranking $ranking)
     {
+        Log::info('Showing players of ranking for user: ' . Auth::id());
+
         $ranking->players = $ranking->players()
             ->orderBy('score', 'desc')
             ->get();
@@ -86,8 +91,10 @@ class RankingController extends Controller
      * @param  \App\Ranking  $ranking
      * @return \Illuminate\Http\Response
      */
-    public function edit(Ranking  $ranking)
+    public function edit(Ranking $ranking)
     {
+        Log::info('Showing update ranking form for user: ' . Auth::id());
+
         return view('ranking-edit', [
             'ranking' => $ranking
         ]);
