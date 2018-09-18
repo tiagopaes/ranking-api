@@ -46,7 +46,7 @@
                                     <form action="{{ route('ranking.destroy', $ranking->id) }}" method="POST">
                                         @method('DELETE')
                                         @csrf
-                                        <button type="submit" class="btn btn-outline-danger">Remove</button>
+                                        <button type="submit" class="btn btn-outline-danger">Delete</button>
                                     </form>
                                 </td>
                             </tr>
