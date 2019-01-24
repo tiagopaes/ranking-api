@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Ranking;
 use Exception;
 use Validator;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class PlayerController extends Controller
 {
@@ -30,6 +32,8 @@ class PlayerController extends Controller
      */
     public function create(Ranking $ranking)
     {
+        Log::info('Showing create player form for user: ' . Auth::id());
+
         return view('player-create', [
             'ranking' => $ranking
         ]);
@@ -49,7 +53,7 @@ class PlayerController extends Controller
             $playerAlreadyExists = $ranking->players()
                 ->where('name', $name)
                 ->count() > 0;
-            
+
             if ($playerAlreadyExists) {
                 throw new Exception('The name has already been taken.');
             }

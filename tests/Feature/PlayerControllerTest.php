@@ -20,4 +20,28 @@ class PlayerControllerTest extends TestCase
             ]);
         $this->assertEquals(1, $ranking->players()->count());
     }
+
+    public function testShouldShowTheCreateForm()
+    {
+        $ranking = factory(Ranking::class)->create();
+        $this->actingAs($ranking->user)
+            ->get("/ranking/{$ranking->id}/player/create")
+            ->assertOk()
+            ->assertSee('New Player');
+    }
+
+    public function testShouldNotAllowDuplicatedNamesWhenCreatingPlayer()
+    {
+        $ranking = factory(Ranking::class)->create();
+        $ranking->players()->create(['name' => 'player name']);
+        $this->actingAs($ranking->user)
+            ->post(
+                "/ranking/{$ranking->id}/player",
+                ['name' => 'player name']
+            );
+        $this->actingAs($ranking->user)
+            ->get('/home')
+            ->assertOk()
+            ->assertSee('The name has already been taken');
+    }
 }
