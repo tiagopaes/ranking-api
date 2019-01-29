@@ -3,7 +3,6 @@
 namespace Tests\Feature\API;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
 use App\Ranking;
@@ -21,6 +20,12 @@ class PlayerControllerTest extends TestCase
         $this->json('GET', "/api/ranking/{$ranking->id}/player")
             ->assertOk()
             ->assertJsonCount(0);
+
+        $ranking->players()->create(['name' => 'player 1']);
+        Passport::actingAs($ranking->user);
+        $this->json('GET', "/api/ranking/{$ranking->id}/player")
+            ->assertOk()
+            ->assertJsonCount(1);
     }
 
     public function testShouldShowOnePlayer()
@@ -138,5 +143,16 @@ class PlayerControllerTest extends TestCase
             "/api/ranking/{$player->ranking->id}/player/{$player->id}")
             ->assertStatus(404)
             ->assertSee('not found');
+    }
+
+    public function testShouldListPlayersWithLimit()
+    {
+        $ranking = factory(Ranking::class)->create();
+        $ranking->players()->create(['name' => 'player 1']);
+        $ranking->players()->create(['name' => 'player 2']);
+        Passport::actingAs($ranking->user);
+        $this->json('GET', "/api/ranking/{$ranking->id}/player?limit=1")
+            ->assertOk()
+            ->assertJsonCount(1);
     }
 }

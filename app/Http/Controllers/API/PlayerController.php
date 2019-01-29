@@ -17,10 +17,11 @@ class PlayerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index(Ranking $ranking)
+    public function index(Ranking $ranking, Request $request)
     {
         return $ranking->players()
             ->orderBy('score', 'desc')
+            ->limit($request->get('limit'))
             ->get();
     }
 
