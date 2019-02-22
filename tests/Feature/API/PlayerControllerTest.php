@@ -64,7 +64,7 @@ class PlayerControllerTest extends TestCase
             ->assertStatus(400);
     }
 
-    public function testShouldNotCreatePlayerWithDuplicatedName()
+    public function testShouldCreatePlayerWithDuplicatedName()
     {
         $player = factory(Player::class)->create();
         Passport::actingAs($player->ranking->user);
@@ -72,8 +72,7 @@ class PlayerControllerTest extends TestCase
             'POST',
             "/api/ranking/{$player->ranking->id}/player",
             ['name' => $player->name])
-            ->assertStatus(422)
-            ->assertSee('The name has already been taken');
+            ->assertStatus(201);
     }
 
     public function testShouldUpdateOnePlayer()
@@ -118,8 +117,7 @@ class PlayerControllerTest extends TestCase
             'PUT',
             "/api/ranking/{$ranking->id}/player/{$player2->id}",
             ['name' => $player1->name])
-            ->assertStatus(422)
-            ->assertSee('The name has already been taken');
+            ->assertOk();
     }
 
     public function testShouldDeleteOnePlayer()

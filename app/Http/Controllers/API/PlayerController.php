@@ -13,7 +13,7 @@ class PlayerController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * 
+     *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
@@ -42,20 +42,9 @@ class PlayerController extends Controller
             return response()->json($validator->errors(), 400);
         }
 
-        $name = $request->get('name');
-        $playerAlreadyExists = $ranking->players()
-            ->where('name', $name)
-            ->count() > 0;
-        
-        if ($playerAlreadyExists) {
-            return response()->json([
-                'error' => 'The name has already been taken.'
-            ], 422);
-        }
-
         try {
             return $ranking->players()->create([
-                'name' => $name,
+                'name' => $request->get('name'),
                 'score' => $request->get('score', 0)
             ]);
         } catch (Exception $exception) {
@@ -78,7 +67,7 @@ class PlayerController extends Controller
                 'error' => 'not found'
             ], 404);
         }
-        
+
         return $player;
     }
 
@@ -104,18 +93,6 @@ class PlayerController extends Controller
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
-        }
-
-        if ($request->has('name')) {
-            $playerAlreadyExists = $ranking->players()
-                ->where('name', $request->get('name'))
-                ->count() > 0;
-            
-            if ($playerAlreadyExists) {
-                return response()->json([
-                    'error' => 'The name has already been taken.'
-                ], 422);
-            }
         }
 
         try {
