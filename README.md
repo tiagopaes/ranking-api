@@ -8,6 +8,6 @@ A simple API for game ranking
 - `docker-compose up`
 - `docker exec -it ranking-app /bin/bash`
 - `cp .env.example .env`
-- `php artisan key:generate`
 - `composer install`
+- `php artisan key:generate`
 
