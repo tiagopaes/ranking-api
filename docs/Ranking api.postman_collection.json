@@ -1,10 +1,51 @@
 {
 	"info": {
-		"_postman_id": "f216e71a-b700-4cbb-9bc4-8c502ecee7e5",
+		"_postman_id": "3bd038a0-0b44-4fae-8aba-f02b396479d1",
 		"name": "Ranking api",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
+		{
+			"name": "Register",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "86b38872-8356-4825-b33b-bf9aa612a778",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"tiaguera\",\n\t\"email\": \"tiaguera@mailinator.com\",\n\t\"password\": \"123456\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/auth/register",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
 		{
 			"name": "Login",
 			"event": [
@@ -12,11 +53,11 @@
 					"listen": "test",
 					"script": {
 						"id": "cb17e5bf-5016-4d19-85a8-0df2a55f29a6",
-						"type": "text/javascript",
 						"exec": [
 							"var data = JSON.parse(responseBody);",
-							"postman.setGlobalVariable(\"token\", data.access_token);"
-						]
+							"postman.setGlobalVariable(\"token\", data.api_token);"
+						],
+						"type": "text/javascript"
 					}
 				}
 			],
@@ -33,16 +74,17 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"grant_type\": \"password\",\n\t\"client_id\": 5,\n\t\"client_secret\": \"o6AyOYzXR9ogQAIA1YFqGlTOAXK1negy7yBP68hW\",\n\t\"username\": \"tiaguera@mailinator.com\",\n\t\"password\": \"123456\",\n\t\"scope\": \"*\"\n}\n"
+					"raw": "{\n\t\"email\": \"tiaguera@mailinator.com\",\n\t\"password\": \"123456\"\n}\n"
 				},
 				"url": {
-					"raw": "{{host}}/oauth/token",
+					"raw": "{{host}}/api/auth/login",
 					"host": [
 						"{{host}}"
 					],
 					"path": [
-						"oauth",
-						"token"
+						"api",
+						"auth",
+						"login"
 					]
 				}
 			},
@@ -68,7 +110,10 @@
 						"value": "application/json"
 					}
 				],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "{{host}}/api/user",
 					"host": [
@@ -114,7 +159,10 @@
 						"value": "application/json"
 					}
 				],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "{{host}}/api/ranking",
 					"host": [
@@ -148,7 +196,10 @@
 						"value": "application/json"
 					}
 				],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "{{host}}/api/ranking/1",
 					"host": [
@@ -358,7 +409,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"score\": 40,\n\t\"name\": \"manezinho 3\"\n}"
+					"raw": ""
 				},
 				"url": {
 					"raw": "{{host}}/api/ranking/1/player",
@@ -409,7 +460,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"score\": 40,\n\t\"name\": \"manezinho 3\"\n}"
+					"raw": ""
 				},
 				"url": {
 					"raw": "{{host}}/api/ranking/1/player/1",

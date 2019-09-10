@@ -21,4 +21,5 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('ranking', 'RankingController')->except(['index']);
 Route::resource('ranking.player', 'PlayerController')->only(['create', 'store']);
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')
-    ->middleware(['auth', 'is_admin']);
+    ->middleware(['auth', 'is_admin'])
+    ->name('logs');

@@ -49,17 +49,8 @@ class PlayerController extends Controller
     {
         Validator::make($request->all(), $this->validationRules)->validate();
         try {
-            $name = $request->get('name');
-            $playerAlreadyExists = $ranking->players()
-                ->where('name', $name)
-                ->count() > 0;
-
-            if ($playerAlreadyExists) {
-                throw new Exception('The name has already been taken.');
-            }
-
             $ranking->players()->create([
-                'name' => $name,
+                'name' => $request->get('name'),
                 'score' => 0
             ]);
 

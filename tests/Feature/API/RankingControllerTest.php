@@ -3,9 +3,7 @@
 namespace Tests\Feature\API;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laravel\Passport\Passport;
 use App\User;
 use App\Ranking;
 
@@ -15,8 +13,9 @@ class RankingControllerTest extends TestCase
 
     public function testShouldListRankings()
     {
-        Passport::actingAs(factory(User::class)->create());
-        $this->json('GET', '/api/ranking')
+        $user = factory(User::class)->create();
+        $this->withHeaders($this->getAuthHeader($user))
+            ->json('GET', '/api/ranking')
             ->assertOk()
             ->assertJsonCount(0);
     }
@@ -24,42 +23,42 @@ class RankingControllerTest extends TestCase
     public function testShouldShowOneRanking()
     {
         $ranking = factory(Ranking::class)->create();
-        Passport::actingAs($ranking->user);
-        $this->json('GET', "/api/ranking/{$ranking->id}")
+        $this->withHeaders($this->getAuthHeader($ranking->user))
+            ->json('GET', "/api/ranking/{$ranking->id}")
             ->assertOk()
-            ->assertJsonFragment([ 'id' => $ranking->id ]);
+            ->assertJsonFragment(['id' => $ranking->id]);
     }
 
     public function testShouldNotShowOneRankingOfAnotherUser()
     {
         $ranking = factory(Ranking::class)->create();
         $user = factory(User::class)->create();
-        Passport::actingAs($user);
-        $this->json('GET', "/api/ranking/{$ranking->id}")
+        $this->withHeaders($this->getAuthHeader($user))
+            ->json('GET', "/api/ranking/{$ranking->id}")
             ->assertStatus(404)
             ->assertSee('not found');
     }
 
     public function testShouldCreateARanking()
     {
-        Passport::actingAs(factory(User::class)->create());
-        $this->json('POST', '/api/ranking', ['name' => 'ranking name'])
+        $this->withHeaders($this->getAuthHeader(factory(User::class)->create()))
+            ->json('POST', '/api/ranking', ['name' => 'ranking name'])
             ->assertStatus(201)
             ->assertJsonFragment(['name' => 'ranking name']);
     }
 
     public function testShouldNotCreateARanking()
     {
-        Passport::actingAs(factory(User::class)->create());
-        $this->json('POST', '/api/ranking')
+        $this->withHeaders($this->getAuthHeader(factory(User::class)->create()))
+            ->json('POST', '/api/ranking')
             ->assertStatus(400);
     }
 
     public function testShouldNotAllowDuplicatedNamesWhenCreatingRanking()
     {
         $ranking = factory(Ranking::class)->create();
-        Passport::actingAs($ranking->user);
-        $this->json('POST', '/api/ranking', ['name' => $ranking->name])
+        $this->withHeaders($this->getAuthHeader($ranking->user))
+            ->json('POST', '/api/ranking', ['name' => $ranking->name])
             ->assertStatus(422)
             ->assertSee('The name has already been taken');
     }
@@ -67,8 +66,8 @@ class RankingControllerTest extends TestCase
     public function testShouldUpdateOneRanking()
     {
         $ranking = factory(Ranking::class)->create();
-        Passport::actingAs($ranking->user);
-        $this->json('PUT', "/api/ranking/{$ranking->id}", ['name' => 'updated'])
+        $this->withHeaders($this->getAuthHeader($ranking->user))
+            ->json('PUT', "/api/ranking/{$ranking->id}", ['name' => 'updated'])
             ->assertOk()
             ->assertJsonFragment(['message' => 'Ranking updated!']);
     }
@@ -77,8 +76,8 @@ class RankingControllerTest extends TestCase
     {
         $ranking = factory(Ranking::class)->create();
         $user = factory(User::class)->create();
-        Passport::actingAs($user);
-        $this->json('PUT', "/api/ranking/{$ranking->id}", ['name' => 'updated'])
+        $this->withHeaders($this->getAuthHeader($user))
+            ->json('PUT', "/api/ranking/{$ranking->id}", ['name' => 'updated'])
             ->assertStatus(404)
             ->assertSee('not found');
     }
@@ -88,20 +87,20 @@ class RankingControllerTest extends TestCase
         $user = factory(User::class)->create();
         $user->rankings()->create(['name' => 'ranking 1']);
         $ranking2 = $user->rankings()->create(['name' => 'ranking 2']);
-        Passport::actingAs($user);
-        $this->json(
-            'PUT',
-            "/api/ranking/{$ranking2->id}",
-            ['name' => 'ranking 1']
-        )->assertStatus(422)
-        ->assertSee('The name has already been taken');
+        $this->withHeaders($this->getAuthHeader($user))
+            ->json(
+                'PUT',
+                "/api/ranking/{$ranking2->id}",
+                ['name' => 'ranking 1']
+            )->assertStatus(422)
+            ->assertSee('The name has already been taken');
     }
 
     public function testShouldNotUpdateARanking()
     {
         $ranking = factory(Ranking::class)->create();
-        Passport::actingAs($ranking->user);
-        $this->json('PUT', "/api/ranking/{$ranking->id}")
+        $this->withHeaders($this->getAuthHeader($ranking->user))
+            ->json('PUT', "/api/ranking/{$ranking->id}")
             ->assertStatus(400);
     }
 
@@ -109,8 +108,8 @@ class RankingControllerTest extends TestCase
     {
         $ranking = factory(Ranking::class)->create();
         $user = $ranking->user;
-        Passport::actingAs($user);
-        $this->json('DELETE', "/api/ranking/{$ranking->id}")
+        $this->withHeaders($this->getAuthHeader($ranking->user))
+            ->json('DELETE', "/api/ranking/{$ranking->id}")
             ->assertOk()
             ->assertJsonFragment(['message' => 'Ranking deleted!']);
         $this->assertEquals(0, $user->rankings()->count());
@@ -120,8 +119,8 @@ class RankingControllerTest extends TestCase
     {
         $ranking = factory(Ranking::class)->create();
         $user = factory(User::class)->create();
-        Passport::actingAs($user);
-        $this->json('DELETE', "/api/ranking/{$ranking->id}")
+        $this->withHeaders($this->getAuthHeader($user))
+            ->json('DELETE', "/api/ranking/{$ranking->id}")
             ->assertStatus(404)
             ->assertSee('not found');
     }

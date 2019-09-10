@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Ranking;
 
@@ -30,7 +29,7 @@ class PlayerControllerTest extends TestCase
             ->assertSee('New Player');
     }
 
-    public function testShouldNotAllowDuplicatedNamesWhenCreatingPlayer()
+    public function testShouldAllowDuplicatedNamesWhenCreatingPlayer()
     {
         $ranking = factory(Ranking::class)->create();
         $ranking->players()->create(['name' => 'player name']);
@@ -42,6 +41,6 @@ class PlayerControllerTest extends TestCase
         $this->actingAs($ranking->user)
             ->get('/home')
             ->assertOk()
-            ->assertSee('The name has already been taken');
+            ->assertSee('Player created');
     }
 }

@@ -1,0 +1,52 @@
+# v3 syntax
+version: '3'
+
+# Named volumes
+volumes:
+  # MySQL Data
+  ranking-mysql-data:
+    driver: local
+
+  ranking-mysql-data-test:
+    driver: local
+
+services:
+  # MySQL (5.7)
+  mysql:
+    image: mysql:5.7
+    container_name: ranking-mysql
+    volumes:
+      - ranking-mysql-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=ranking
+      - MYSQL_USER=ranking
+      - MYSQL_PASSWORD=secret
+
+  mysqltest:
+    image: mysql:5.7
+    container_name: ranking-mysql-test
+    volumes:
+      - ranking-mysql-data-test:/var/lib/mysql
+      - ./mysql.conf:/etc/mysql/conf.d/my.cnf
+    ports:
+      - "3307:3307"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=ranking
+      - MYSQL_USER=ranking
+      - MYSQL_PASSWORD=secret
+
+  # PHP (with Nginx)
+  app:
+    image: ambientum/php:7.2-nginx
+    container_name: ranking-app
+    volumes:
+      - ./:/var/www/app
+    ports:
+      - "80:8080"
+    links:
+      - mysql
+      - mysqltest
