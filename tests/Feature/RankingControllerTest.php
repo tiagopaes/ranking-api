@@ -4,8 +4,8 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\User;
-use App\Ranking;
+use App\Models\User;
+use App\Models\Ranking;
 
 class RankingControllerTest extends TestCase
 {

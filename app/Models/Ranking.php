@@ -1,10 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\User;
-use App\Player;
+use App\Models\User;
+use App\Models\Player;
 
 class Ranking extends Model
 {
@@ -12,7 +12,7 @@ class Ranking extends Model
         'name',
         'user_id'
     ];
-    
+
     public function user()
     {
         return $this->belongsTo(User::class);

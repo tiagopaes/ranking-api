@@ -1,9 +1,9 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Ranking;
+use App\Models\Ranking;
 
 class Player extends Model
 {
@@ -11,7 +11,7 @@ class Player extends Model
         'name',
         'score'
     ];
-    
+
     public function ranking()
     {
         return $this->belongsTo(Ranking::class);

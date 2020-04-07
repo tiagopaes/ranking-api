@@ -4,9 +4,9 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Ranking;
-use App\Player;
-use App\User;
+use App\Models\Ranking;
+use App\Models\Player;
+use App\Models\User;
 
 class PlayerControllerTest extends TestCase
 {

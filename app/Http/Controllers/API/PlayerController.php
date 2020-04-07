@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Ranking;
-use App\Player;
+use App\Models\Ranking;
+use App\Models\Player;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Exception;
@@ -57,7 +57,7 @@ class PlayerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Ranking  $ranking
+     * @param  \App\Models\Ranking  $ranking
      * @return \Illuminate\Http\Response
      */
     public function show(Ranking $ranking, Player $player, Request $request)
@@ -75,7 +75,7 @@ class PlayerController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Ranking  $ranking
+     * @param  \App\Models\Ranking  $ranking
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Ranking $ranking, Player $player)
@@ -109,7 +109,7 @@ class PlayerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Ranking  $ranking
+     * @param  \App\Models\Ranking  $ranking
      * @return \Illuminate\Http\Response
      */
     public function destroy(Ranking $ranking, Player $player, Request $request)

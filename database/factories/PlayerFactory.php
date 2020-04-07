@@ -1,9 +1,9 @@
 <?php
 
 use Faker\Generator as Faker;
-use App\Ranking;
+use App\Models\Ranking;
 
-$factory->define(App\Player::class, function (Faker $faker) {
+$factory->define(App\Models\Player::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
         'ranking_id' => factory(Ranking::class)->create()->id
