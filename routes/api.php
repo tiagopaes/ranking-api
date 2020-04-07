@@ -16,11 +16,8 @@ use Illuminate\Http\Request;
 Route::post('/auth/register', 'API\AuthController@register');
 Route::post('/auth/login', 'API\AuthController@login');
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::middleware('auth:api')->group( function () {
-    Route::resource('ranking', 'API\RankingController');
-    Route::resource('ranking.player', 'API\PlayerController');
+    Route::apiResource('ranking', 'API\RankingController');
+    Route::apiResource('ranking.player', 'API\PlayerController');
+    Route::get('/user', 'API\AuthController@getUser');
 });

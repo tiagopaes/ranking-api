@@ -46,7 +46,7 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 401);
         }
-        
+
         $user = User::where('email', $data['email'])->first();
 
         if (!Hash::check($data['password'], $user->password)) {
@@ -54,5 +54,10 @@ class AuthController extends Controller
         }
 
         return $user;
+    }
+
+    public function getUser(Request $request)
+    {
+        return $request->user();
     }
 }

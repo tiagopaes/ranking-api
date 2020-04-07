@@ -11,15 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-Route::resource('ranking', 'RankingController')->except(['index']);
-Route::resource('ranking.player', 'PlayerController')->only(['create', 'store']);
+Route::view('/', 'welcome');
+Route::view('/home', 'home')->middleware(['auth'])->name('home');
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')
     ->middleware(['auth', 'is_admin'])
     ->name('logs');
