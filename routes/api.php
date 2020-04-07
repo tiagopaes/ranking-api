@@ -13,11 +13,11 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::post('/auth/register', 'API\AuthController@register');
-Route::post('/auth/login', 'API\AuthController@login');
+Route::post('/auth/register', 'AuthController@register');
+Route::post('/auth/login', 'AuthController@login');
 
 Route::middleware('auth:api')->group( function () {
-    Route::apiResource('ranking', 'API\RankingController');
-    Route::apiResource('ranking.player', 'API\PlayerController');
-    Route::get('/user', 'API\AuthController@getUser');
+    Route::apiResource('ranking', 'RankingController');
+    Route::apiResource('ranking.player', 'PlayerController');
+    Route::get('/user', 'AuthController@getUser');
 });
